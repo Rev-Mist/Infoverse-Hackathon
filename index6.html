@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeLink - Digital Safety Learning Hub</title>
+    <style href="cs.css"></style>
+    <script href="js.js"></script>
+</head>
+<body>
+    <div class="neural-bg" id="neuralBg"></div>
+
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <div class="toast-icon" id="toastIcon">🏆</div>
+            <div class="toast-text">
+                <h4 id="toastTitle">Achievement Unlocked!</h4>
+                <p id="toastMessage">You earned a new badge</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breach Theory Modal (auto-shown on first load) -->
+    <div class="modal-backdrop" id="breachModal" role="dialog" aria-modal="true">
+        <div class="modal-card" id="breachModalContent">
+            <!-- Content populated by JS -->
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span>🛡️</span>
+                    <span>SafeLink</span>
+                </div>
+                <nav class="nav">
+                    <a class="nav-link" onclick="navigateTo('landing')">Home</a>
+                    <a class="nav-link" onclick="navigateTo('dashboard')">Dashboard</a>
+                    <a class="nav-link" onclick="navigateTo('achievements')">Achievements</a>
+                    <a class="nav-link" onclick="navigateTo('leaderboard')">Leaderboard</a>
+                </nav>
+                <div class="security-score-badge" id="headerScore">
+                    🏆 <span id="headerScoreValue">0</span> pts
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="landing" class="page-section active">
+        <div class="hero">
+            <div class="container">
+                <h1>Defend Your Digital Identity in the Neural Age</h1>
+                <p>Master digital defense through gamified learning. Stop phishing. Strengthen passwords. Protect yourself from neural hijacking.</p>
+                <button class="btn-primary" onclick="navigateTo('dashboard')">Start Your Defense Training</button>
+            </div>
+        </div>
+
+        <div class="threats-section">
+            <div class="container">
+                <h2 class="section-title">Modern Cyber Threats</h2>
+                <div class="threats-grid" id="threatsGrid"></div>
+            </div>
+        </div>
+
+        <div class="threats-section">
+            <div class="container">
+                <h2 class="section-title">Learning Modules</h2>
+                <div class="modules-grid" id="modulesPreview"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard" class="page-section">
+        <div class="container dashboard">
+            <h2 class="section-title">Your Security Command Center</h2>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3 class="card-title">🏆 Security Score</h3>
+                    <div class="score-display" id="totalScore">0</div>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <span>Password Security</span>
+                            <span id="passwordPoints">0 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Phishing Detection</span>
+                            <span id="phishingPoints">0 pts</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Achievements</span>
+                            <span id="achievementPoints">0 pts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3 class="card-title">📊 Learning Progress</h3>
+                    <div class="progress-stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="modulesCompleted">0</div>
+                            <div class="stat-label">Modules Done</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="challengesWon">0</div>
+                            <div class="stat-label">Challenges Won</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="currentStreak">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3 class="card-title">⚡ Your Level</h3>
+                    <div class="score-display" style="font-size: 32px;" id="userLevel">Novice</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="levelProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="text-center" style="margin-top: 15px; font-size: 14px; color: var(--text-dim);" id="levelDescription">Complete more challenges to rank up!</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card mb-30">
+                <h3 class="card-title">🎯 Today's Challenges</h3>
+                <div id="challengesList"></div>
+            </div>
+
+            <div class="dashboard-card mb-30">
+                <h3 class="card-title">💡 Recommended for You</h3>
+                <div id="recommendedModule"></div>
+            </div>
+
+            <h2 class="section-title mt-30">All Learning Modules</h2>
+            <div class="modules-grid" id="allModules"></div>
+        </div>
+    </section>
+
+    <section id="moduleView" class="page-section">
+        <div class="container" style="padding: 40px 20px;">
+            <button class="btn-secondary mb-20" onclick="navigateTo('dashboard')">← Back to Dashboard</button>
+            
+            <div class="module-header" id="moduleHeader"></div>
+            
+            <div class="lessons-grid" id="lessonsGrid"></div>
+        </div>
+    </section>
+
+    <section id="lessonView" class="page-section">
+        <div class="quiz-container">
+            <button class="btn-secondary mb-20" onclick="backToModule()">← Back to Module</button>
+            
+            <div class="quiz-header">
+                <h2 id="lessonTitle">Lesson Title</h2>
+                <div class="quiz-progress" id="quizProgress">Question 1 of 3</div>
+                <div class="quiz-score">Score: <span id="quizScore">0</span> pts</div>
+            </div>
+
+            <div id="quizContent"></div>
+        </div>
+    </section>
+
+    <section id="phishingQuiz" class="page-section">
+        <div class="quiz-container">
+            <button class="btn-secondary mb-20" onclick="navigateTo('dashboard')">← Back to Dashboard</button>
+            
+            <div class="quiz-header">
+                <h2>🎣 Phishing Detection Challenge</h2>
+                <div class="quiz-progress" id="phishingProgress">Email 1 of 3</div>
+                <div class="quiz-score">Score: <span id="phishingScore">0</span> pts</div>
+            </div>
+
+            <div id="phishingContent"></div>
+        </div>
+    </section>
+
+    <section id="passwordChecker" class="page-section">
+        <div class="password-checker">
+            <button class="btn-secondary mb-20" onclick="navigateTo('dashboard')">← Back to Dashboard</button>
+            
+            <h2 class="section-title">🔐 Password Strength Challenge</h2>
+            <p class="text-center" style="color: var(--text-secondary); margin-bottom: 40px;">Create strong passwords and learn what makes them secure</p>
+
+            <div class="password-input-group">
+                <label style="font-size: 16px; font-weight: 600; margin-bottom: 10px; display: block;">Enter a password to test:</label>
+                <input type="text" class="password-input" id="passwordInput" placeholder="Type your password here..." oninput="checkPasswordStrength()">
+                
+                <div class="strength-meter">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <div class="strength-label" id="strengthLabel">Enter a password to see its strength</div>
+            </div>
+
+            <div class="strength-feedback" id="passwordFeedback"></div>
+
+            <div class="tips-sidebar">
+                <h3 class="tips-title">💡 Password Security Tips</h3>
+                <div class="tip-item">✓ Use at least 16 characters</div>
+                <div class="tip-item">✓ Mix uppercase, lowercase, numbers, and symbols</div>
+                <div class="tip-item">✓ Avoid common words and personal information</div>
+                <div class="tip-item">✓ Use a unique password for each account</div>
+                <div class="tip-item">✓ Consider using a password manager</div>
+                <div class="tip-item">✓ Enable multi-factor authentication</div>
+            </div>
+
+            <div class="text-center mt-30">
+                <button class="btn-primary" onclick="completePasswordChallenge()">Complete Challenge (+50 pts)</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="achievements" class="page-section">
+        <div class="container">
+            <h2 class="section-title" style="margin-top: 40px;">🏆 Your Achievements</h2>
+            <div class="text-center mb-30">
+                <div style="font-size: 48px; font-weight: 700; color: var(--cyan);" id="totalAchievementPoints">0 pts</div>
+                <p style="color: var(--text-secondary);">Total Achievement Points</p>
+            </div>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+    </section>
+
+    <section id="leaderboard" class="page-section">
+        <div class="leaderboard-container">
+            <h2 class="section-title">🏅 Global Leaderboard</h2>
+            
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" onclick="switchLeaderboard('weekly')">Weekly</button>
+                <button class="tab-btn" onclick="switchLeaderboard('monthly')">Monthly</button>
+            </div>
+
+            <div class="leaderboard-list" id="leaderboardList"></div>
+        </div>
+    </section>
+
+</body>
+</html>
